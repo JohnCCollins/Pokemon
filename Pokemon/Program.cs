@@ -9,7 +9,6 @@ namespace Pokemon
 {
     class Program
     {
-
         static Pokemon[] team = new Pokemon[3];
         static Pokemon[] enemyTeam = new Pokemon[3];
 
@@ -23,78 +22,109 @@ namespace Pokemon
             var fileName = Path.Combine(directory.FullName, "Pokemon.csv");
             var fileContents = ReadPokemon(fileName);
 
+            bool gameState = true;
 
-
-            Console.WriteLine("Please type in three pokemon.");
-
-            string[] sel = new string[3];
-            sel[0] = Console.ReadLine();
-            sel[1] = Console.ReadLine();
-            sel[2] = Console.ReadLine();
-
-
-
-            for (int i = 0; i <= team.Length-1; i++)
+            while (gameState == true)
             {
+                Console.WriteLine("Please type in three pokemon.");
 
-                foreach (Pokemon pokemon in fileContents)
+                string[] sel = new string[3];
+                sel[0] = Console.ReadLine();
+                sel[1] = Console.ReadLine();
+                sel[2] = Console.ReadLine();
+
+
+
+                for (int i = 0; i <= team.Length - 1; i++)
                 {
 
-                    if (pokemon.Name == sel[i])
+                    foreach (Pokemon pokemon in fileContents)
                     {
-                        team[i] = pokemon;
-                        Console.WriteLine(pokemon.Name + " added!");
-                        
+
+                        if (pokemon.Name == sel[i])
+                        {
+                            team[i] = pokemon;
+                            Console.WriteLine(pokemon.Name + " added!");
+
+                        }
                     }
                 }
-            }
 
-            for (int i = 0; i <= enemyTeam.Length-1; i++)
-                foreach (Pokemon pokemon in fileContents)
+                for (int i = 0; i <= enemyTeam.Length - 1; i++)
                 {
                     int foe = enemySel.Next(1, 150);
-                    if (pokemon.Number == foe)
+                    foreach (Pokemon pokemon in fileContents)
                     {
-                        enemyTeam[i] = pokemon;
-                        Console.WriteLine(enemyTeam[i].Name + " added by opponent.");
+
+                        if (pokemon.Number == foe)
+                        {
+                            enemyTeam[i] = pokemon;
+                            Console.WriteLine(enemyTeam[i].Name + " added by opponent.");
+                        }
                     }
                 }
+                Console.WriteLine("Your team is: " + team[0].Name + ", " + team[1].Name + ", " + team[2].Name);
+                Console.WriteLine("The opponent's team is: " + enemyTeam[0].Name + ", " + enemyTeam[1].Name + ", " + enemyTeam[2].Name);
 
-            Console.WriteLine("Your team is: " + team[0].Name + ", " + team[1].Name + ", " + team[2].Name);
-            Console.WriteLine("The opponent's team is: " + enemyTeam[0].Name + ", " + enemyTeam[1].Name + ", " + enemyTeam[2].Name);
+                Next();
+                NextEnemy();
+                Battle();
 
-            chooseFighters();
-            Battle();
+                Console.Write("Play again? y/n");
+
+                var yOrN = Console.ReadKey();
+                if (yOrN.Key == ConsoleKey.Y)
+                {
+                    Console.WriteLine();
+                    continue;
+                }
+                else
+                {
+                    gameState = false;
+                }
+
+            }
+
+
+           
         }
 
-        public static void teamSelection()
+       
+
+
+        public static void Next()
         {
-
-        }
-
-        public static void chooseFighters()
-        {
-
             Console.WriteLine("Which pokemon will you send out?");
 
             var choice = Console.ReadLine();
-            for (int i = 0; i <= team.Length-1; i++)
+            for (int i = 0; i <= team.Length - 1; i++)
             {
-                if (choice == team[i].Name)
+                if (team[i] != null)
                 {
-                    fighters[0] = team[i];
-                    Console.WriteLine("Sent out " + fighters[0].Name);
+                    if (choice == team[i].Name)
+                    {
+                        fighters[0] = team[i];
+                        Console.WriteLine("Sent out " + fighters[0].Name);
+                    }
                 }
             }
+        }
 
+
+
+        public static void NextEnemy()
+        {
             int foeChoice = enemySel.Next(0, enemyTeam.Length);
             {
-                fighters[1] = enemyTeam[foeChoice];
-                Console.WriteLine("Opponent sent out " + fighters[1].Name);
+                
+                    fighters[1] = enemyTeam[foeChoice];
+                    Console.WriteLine("Opponent sent out " + fighters[1].Name);
+               
             }
 
-
         }
+
+
 
         public static void Battle()
         {
@@ -121,19 +151,19 @@ namespace Pokemon
 
 
 
-            Console.WriteLine("The two pokemon battle!");
+            Console.WriteLine(fighters[0].Name + " battles " + fighters[1].Name + "!");
 
             for (int i = 0; i <= stats.Length-1; i++)
             {
                 if (stats[i] > foeStats[i])
                 {
                     score++;
-                    Console.WriteLine("Your " + fighters[0].Name + " scores a hit with its superior " + statNames[i] + " stat!");
+                    Console.WriteLine("Your " + fighters[0].Name + " scores a hit with its superior " + statNames[i] + "!");
                 }
                 else if (foeStats[i] > stats[i])
                 {
                     foeScore++;
-                    Console.WriteLine("The opponent's " + fighters[1].Name + " scores a hit with its superior " + statNames[i] + " stat!");
+                    Console.WriteLine("The opponent's " + fighters[1].Name + " scores a hit with its superior " + statNames[i] + "!");
                 }
                 else
                 {
@@ -144,17 +174,86 @@ namespace Pokemon
             if (score > foeScore)
             {
                 Console.WriteLine("Your " + fighters[0].Name + " defeated " + fighters[1].Name +"!");
-            }
-            else if (score < foeScore)
-            {
-                Console.WriteLine("The opponent's " + fighters[1].Name + " defeated " + fighters[0].Name + "!");
-            }
-            else
-            {
-                Console.WriteLine("After an epic clash both pokemon faint!");
-            }
-            
+                for (int i = 0; i <= enemyTeam.Length-1; i++)
+                {
 
+                    if (enemyTeam[i].Name == fighters[1].Name)
+                    {
+                        int pos = i;
+
+                        for (int j = pos; j < enemyTeam.Length - 1; j++)
+                        {
+                            enemyTeam[j] = enemyTeam[j + 1];
+                        }
+
+                        Array.Resize(ref enemyTeam, enemyTeam.Length - 1);
+
+                        foreach (Pokemon pokemon in enemyTeam)
+                        {
+                            Console.WriteLine(pokemon.Name);
+
+                        }
+
+                        if (enemyTeam.Length > 0)
+                        {
+                            NextEnemy();
+                            Battle();
+                        }
+                        else
+                        {
+                            Console.WriteLine("You defeated the opponent!");
+                        }
+                    }
+
+
+                }
+
+                
+            }
+            else if (score <= foeScore)
+            {
+                foreach (Pokemon pokemon in team)
+                {
+                    Console.WriteLine(pokemon.Name);
+                }
+                Console.WriteLine("The opponent's " + fighters[1].Name + " defeated " + fighters[0].Name + "!");
+                for (int i = 0; i <= team.Length - 1; i++)
+                {
+
+                    
+                        if (team[i].Name == fighters[0].Name)
+                        {
+                            int pos = i;
+                            
+                                for (int j = pos; j < team.Length-1; j++)
+                                {
+                                    team[j] = team[j+1];  
+                                }
+    
+                            Array.Resize(ref team, team.Length - 1);
+
+                        Console.WriteLine("Your remaining pokemon:");
+                            foreach (Pokemon pokemon in team)
+                            {
+                                Console.WriteLine(pokemon.Name);
+                            
+                            }
+                       
+                            if (team.Length > 0)
+                            {
+                                Next();
+                                Battle();
+                            }
+                            else
+                            {
+                                Console.WriteLine("Your team has been wiped out!");
+                            }
+                        }
+                    
+                }
+
+            }
+           
         }
 
             public static string ReadFile(string fileName)
