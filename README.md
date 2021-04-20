@@ -5,7 +5,7 @@ Text based Pokemon battle simulator, wherein pokemon are compared via their resp
 <h2>Requirements and Features:</h2>
 
 <strong>(Implement a “master loop” console application where the user can repeatedly enter commands/perform actions, including choosing to exit the program):</strong> 
-The main method in Program.cs finds the user selecting three pokemon (or commanding the program to randomly select three pokemon for them), subsequently choosing their first pokemon to send into battle against the opposing team, selecting any replacement pokemon in the event of the current battling pokemon's defeat (or choosing to concede, exiting the program). Upon the battle's resolution, the user is prompted to decide whether they would like to battle again or exit the program. If they choose to continue, the main method resets, and the user can continue play ad infinitum.
+The main method in Program.cs finds the user selecting three pokemon or commanding the program to randomly select three pokemon for them, subsequently choosing their first pokemon to send into battle against the opposing team, selecting any replacement pokemon in the event of the current battling pokemon's defeat (or choosing to concede, exiting the program). Upon the battle's resolution, the user is prompted to decide whether they would like to battle again or exit the program. If they choose to continue, the main method resets, and the user can continue play ad infinitum.
 
 
 
