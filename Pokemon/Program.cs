@@ -9,12 +9,13 @@ namespace Pokemon
 {
     class Program
     {
-        static Pokemon[] team = new Pokemon[3];
-        static Pokemon[] enemyTeam = new Pokemon[3];
+        static Pokemon[] team;
+        static Pokemon[] enemyTeam;
 
         static Pokemon[] fighters = new Pokemon[2];
 
         static Random enemySel = new Random();
+
         static void Main(string[] args)
         {
             string currentDirectory = Directory.GetCurrentDirectory();
@@ -26,86 +27,243 @@ namespace Pokemon
 
             while (gameState == true)
             {
-                Console.WriteLine("Please type in three pokemon.");
+                
+                team = new Pokemon[3];
+                enemyTeam = new Pokemon[3];
 
-                string[] sel = new string[3];
-                sel[0] = Console.ReadLine();
-                sel[1] = Console.ReadLine();
-                sel[2] = Console.ReadLine();
+                Console.WriteLine("Welcome to Pokemon Dojo, in which you will be given three pokemon (from Generations 1-6) with which to battle a randomly generated opposing team.");
+                LineBreak();
+                Console.WriteLine("If you are generally unfamiliar with pokemon and would like your team randomly generated, press the R key.");
+                
+                Console.Write("Otherwise, press any other key. ");
 
+                var choiceOrRandom = Console.ReadKey();
 
-
-                for (int i = 0; i <= team.Length - 1; i++)
+                if (choiceOrRandom.Key == ConsoleKey.R)
                 {
-
-                    foreach (Pokemon pokemon in fileContents)
+                    LineBreak();
+                    Console.Write("Your team: ");
+                    Delay();
+                    for (int i = 0; i <= team.Length - 1; i++)
                     {
 
-                        if (pokemon.Name == sel[i])
+                        int teamMate = enemySel.Next(1, 721);
+                        foreach (Pokemon pokemon in fileContents)
                         {
-                            team[i] = pokemon;
-                            Console.WriteLine(pokemon.Name + " added!");
+                            if (pokemon.Name.Contains("Mega"))
+                            {
+                                pokemon.Number = 0;
+                            }
 
+
+                            if (pokemon.Number == teamMate && pokemon.Legendary.Contains("True"))
+                            {
+                                teamMate = enemySel.Next(pokemon.Number, 721);
+                                pokemon.Number = 0;
+                                Console.WriteLine("Legendary: '" + pokemon.Name + "' found and overridden");
+        
+                            }
+                            else if (pokemon.Number == teamMate && pokemon.Legendary.Contains("False"))
+                            {
+                                team[i] = pokemon;
+                                Console.Write(team[i].Name + ". ");
+                                Delay();
+                            }
                         }
                     }
                 }
+                else
+                {
+                    LineBreak();
 
+                    Console.WriteLine("Choose any three pokemon for battle, and enter their name in one of the fields below.");
+
+                    string[] sel = new string[3];
+
+                    for (int i = 0; i < sel.Length; i++)
+                    {
+                        Console.Write(i + 1 + ": ");
+                        sel[i] = Console.ReadLine();
+                    }
+
+                    for (int i = 0; i <= team.Length - 1; i++)
+                    {
+                        bool isPokemon = false;
+                        foreach (Pokemon pokemon in fileContents)
+                        {
+
+                            if (pokemon.Name.ToUpper() == sel[i].ToUpper())
+                            {
+                                isPokemon = true;
+                                team[i] = pokemon;
+                            }
+                        }
+
+                        if (isPokemon == false)
+                        {
+                            LineBreak();
+                            LineBreak();
+
+                            Console.WriteLine("There is no pokemon with the name '" + sel[i] + "',");
+
+                            Console.Write("please check for typing errors and try again: ");
+
+                            LineBreak();
+                            
+
+                            sel[i] = Console.ReadLine();
+
+                            LineBreak();
+
+                            i--;
+
+                        }
+                        
+                    }
+
+                    Console.WriteLine("Your team: ");
+                    Delay();
+
+                    for (int i = 0; i <= team.Length - 1; i++)
+                    {
+                        Console.WriteLine(team[i].Name + ". ");
+                        Delay();
+                    }
+                }
+
+                LineBreak();
+                Console.Write(String.Format("{0," + Console.WindowWidth / 1 + "}", "Opponent's team: "));
+
+                
+                Delay();
                 for (int i = 0; i <= enemyTeam.Length - 1; i++)
                 {
-                    int foe = enemySel.Next(1, 150);
+                    
+                    int foe = enemySel.Next(1, 721);
                     foreach (Pokemon pokemon in fileContents)
                     {
+                        if (pokemon.Name.Contains("Mega"))
+                        {
+                            pokemon.Number = 0;
+                        }
 
-                        if (pokemon.Number == foe)
+
+                        if (pokemon.Number == foe && pokemon.Legendary.Contains("True"))
+                        {
+                            foe = enemySel.Next(1, 715);
+                            pokemon.Number = 0;
+                            Console.WriteLine("Legendary: '" + pokemon.Name + "' found and overridden");
+                            
+                            
+                        }
+                        else if (pokemon.Number == foe && pokemon.Legendary.Contains("False"))
                         {
                             enemyTeam[i] = pokemon;
-                            Console.WriteLine(enemyTeam[i].Name + " added by opponent.");
+                            Console.Write(String.Format("{0," + Console.WindowWidth / 1 + "}", enemyTeam[i].Name + ". "));
+
+                            
+                            Delay();
                         }
                     }
                 }
-                Console.WriteLine("Your team is: " + team[0].Name + ", " + team[1].Name + ", " + team[2].Name);
-                Console.WriteLine("The opponent's team is: " + enemyTeam[0].Name + ", " + enemyTeam[1].Name + ", " + enemyTeam[2].Name);
 
                 Next();
                 NextEnemy();
                 Battle();
 
-                Console.Write("Play again? y/n");
+
+                Console.Write("Play again? y/n: ");
 
                 var yOrN = Console.ReadKey();
                 if (yOrN.Key == ConsoleKey.Y)
                 {
-                    Console.WriteLine();
+                    LineBreak();
                     continue;
                 }
                 else
                 {
                     gameState = false;
+
                 }
-
             }
-
-
-           
         }
 
-       
-
-
-        public static void Next()
+        public static void randomBuild()
         {
-            Console.WriteLine("Which pokemon will you send out?");
+            
+        }
 
-            var choice = Console.ReadLine();
-            for (int i = 0; i <= team.Length - 1; i++)
+        public static void enemyBuild()
+        {
+
+        }
+
+        public static void LineBreak() // shorthand version of enclosed function, used throughout program for increased readability.
+        {
+            Console.WriteLine(); // Simple line breaks.
+        }
+
+        public static void Delay() // shorthand version of enclosed function, used throughout program for UX purposes.
+            
+        {
+            System.Threading.Thread.Sleep(800); // beatlong delays between instances of output.
+        }
+
+        public static void Exit()
+        {
+            System.Environment.Exit(0);
+        }
+
+
+        public static void Next() // prompts user to select the next fighter from their team to battle with.
+        {
+            LineBreak();
+
+            if (team.Length == 1)
             {
-                if (team[i] != null)
+                Console.Write("Send out your final pokemon, " + team[0].Name + "? (y/n) ");
+                var answer = Console.ReadKey();
+                while (answer.Key != ConsoleKey.Y && answer.Key != ConsoleKey.N)
                 {
-                    if (choice == team[i].Name)
+                    LineBreak();
+                    Console.WriteLine("Press Y to continue, or N to exit the program");
+                    answer = Console.ReadKey();
+                }
+                if (answer.Key == ConsoleKey.N)
+                {
+                    LineBreak();
+                    Console.WriteLine("Thanks for playing!");
+                    Delay();
+                    Exit();
+                }
+                fighters[0] = team[0];
+                LineBreak();
+                Console.WriteLine("Sent out " + fighters[0].Name);
+                Delay();
+                
+            }
+            else if (team.Length < 1)
+            {
+                return;
+            }
+            else
+            {
+                LineBreak();
+                Console.WriteLine("Which pokemon will you send out?");
+
+                var choice = Console.ReadLine();
+                for (int i = 0; i <= team.Length - 1; i++)
+                {
+
+                    if (choice.ToUpper() == team[i].Name.ToUpper())
                     {
                         fighters[0] = team[i];
+                        LineBreak();
                         Console.WriteLine("Sent out " + fighters[0].Name);
+                        Delay();
+                        break;
                     }
+                
                 }
             }
         }
@@ -117,9 +275,12 @@ namespace Pokemon
             int foeChoice = enemySel.Next(0, enemyTeam.Length);
             {
                 
-                    fighters[1] = enemyTeam[foeChoice];
-                    Console.WriteLine("Opponent sent out " + fighters[1].Name);
+                fighters[1] = enemyTeam[foeChoice];
+
+                LineBreak();
                
+                Console.WriteLine(String.Format("{0," + Console.WindowWidth / 1 + "}", "Opponent sent out " + fighters[1].Name));
+                Delay();
             }
 
         }
@@ -149,30 +310,37 @@ namespace Pokemon
                                    "Special Defense"
                                   };
 
-
-
-            Console.WriteLine(fighters[0].Name + " battles " + fighters[1].Name + "!");
+            Console.WriteLine(String.Format("{0," + Console.WindowWidth / 2 + "}", fighters[0].Name + " battles " + fighters[1].Name + "!"));
 
             for (int i = 0; i <= stats.Length-1; i++)
             {
+                LineBreak();
                 if (stats[i] > foeStats[i])
                 {
                     score++;
-                    Console.WriteLine("Your " + fighters[0].Name + " scores a hit with its superior " + statNames[i] + "!");
+                    Delay();
+                    Console.WriteLine("Your " + fighters[0].Name + " scores a hit with its superior " + statNames[i] + "( " + stats[i] + " )!");
+                    
                 }
                 else if (foeStats[i] > stats[i])
                 {
                     foeScore++;
-                    Console.WriteLine("The opponent's " + fighters[1].Name + " scores a hit with its superior " + statNames[i] + "!");
+                    Delay();
+
+                    Console.WriteLine(String.Format("{0," + Console.WindowWidth / 1 + "}", "The opponent's " + fighters[1].Name + " scores a hit with its superior " + statNames[i] + "( " + foeStats[i] + " )!"));
                 }
                 else
                 {
-                    Console.WriteLine("The Pokemon are equally matched in " + statNames[i] + "!");
+                    Delay();
+                    Console.WriteLine(String.Format("{0," + Console.WindowWidth / 2 + "}", "The Pokemon are equally matched in " + statNames[i] + "!"));
+                   
                 }
             }
 
             if (score > foeScore)
             {
+                Delay();
+                LineBreak();
                 Console.WriteLine("Your " + fighters[0].Name + " defeated " + fighters[1].Name +"!");
                 for (int i = 0; i <= enemyTeam.Length-1; i++)
                 {
@@ -188,20 +356,19 @@ namespace Pokemon
 
                         Array.Resize(ref enemyTeam, enemyTeam.Length - 1);
 
-                        foreach (Pokemon pokemon in enemyTeam)
-                        {
-                            Console.WriteLine(pokemon.Name);
-
-                        }
+                        
 
                         if (enemyTeam.Length > 0)
                         {
                             NextEnemy();
                             Battle();
+                            
                         }
                         else
                         {
+                            LineBreak();
                             Console.WriteLine("You defeated the opponent!");
+                            
                         }
                     }
 
@@ -212,48 +379,70 @@ namespace Pokemon
             }
             else if (score <= foeScore)
             {
-                foreach (Pokemon pokemon in team)
-                {
-                    Console.WriteLine(pokemon.Name);
-                }
-                Console.WriteLine("The opponent's " + fighters[1].Name + " defeated " + fighters[0].Name + "!");
+                Delay();
+                LineBreak();
+                Console.WriteLine(String.Format("{0," + Console.WindowWidth / 1 + "}", "The opponent's " + fighters[1].Name + " defeated " + fighters[0].Name + "!"));
                 for (int i = 0; i <= team.Length - 1; i++)
                 {
+                    if (team[i].Name == fighters[0].Name)
+                    {
+                        // removal of current 'fainted' pokemon from team array.
+                        int pos = i;
+                            
+                            for (int j = pos; j < team.Length-1; j++) // re
+                            {
+                                team[j] = team[j+1];  
+                            }
+                        Array.Resize(ref team, team.Length - 1);
+                        Delay();
 
-                    
-                        if (team[i].Name == fighters[0].Name)
+                        if (team.Length > 0)
                         {
-                            int pos = i;
-                            
-                                for (int j = pos; j < team.Length-1; j++)
-                                {
-                                    team[j] = team[j+1];  
-                                }
-    
-                            Array.Resize(ref team, team.Length - 1);
+                            if (team.Length > 1)
+                            {
+                                Delay();
+                                Console.Write("Use next pokemon? (y/n): ");
 
-                        Console.WriteLine("Your remaining pokemon:");
-                            foreach (Pokemon pokemon in team)
-                            {
-                                Console.WriteLine(pokemon.Name);
-                            
+                                var answer = Console.ReadKey();
+                                while (answer.Key != ConsoleKey.Y && answer.Key != ConsoleKey.N)
+                                {
+                                    Console.Write("Press Y to continue, or N to exit the program");
+                                    answer = Console.ReadKey();
+                                }
+                                if (answer.Key == ConsoleKey.N)
+                                {
+                                    Console.WriteLine("Thanks for playing!");
+                                    Delay();
+                                    Exit();
+                                }
+
+                                LineBreak();
+                                Console.Write("Your remaining pokemon: ");
+
+                                Delay();
+                                foreach (Pokemon pokemon in team)
+                                {
+                                    Console.Write(pokemon.Name + ". ");
+                                    Delay();
+                                }
                             }
-                       
-                            if (team.Length > 0)
-                            {
-                                Next();
-                                Battle();
-                            }
-                            else
-                            {
-                                Console.WriteLine("Your team has been wiped out!");
-                            }
+             
+                            Next();
+                            Battle();
+
                         }
+                        else
+                        {
+                            LineBreak();
+                            Delay();
+                            Console.WriteLine("Your team has been wiped out!");
+                        }
+                    }
                     
                 }
 
             }
-           
+
         }
 
             public static string ReadFile(string fileName)
@@ -263,6 +452,7 @@ namespace Pokemon
                     return reader.ReadToEnd();
                 }
             }
+
 
             public static List<Pokemon> ReadPokemon(string fileName)
             {
