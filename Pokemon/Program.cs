@@ -42,7 +42,7 @@ namespace Pokemon
                 if (choiceOrRandom.Key == ConsoleKey.R)
                 {
                     LineBreak();
-                    Console.Write("Your team: ");
+                    Console.WriteLine("Your team: ");
                     Delay();
                     for (int i = 0; i <= team.Length - 1; i++)
                     {
@@ -66,7 +66,7 @@ namespace Pokemon
                             else if (pokemon.Number == teamMate && pokemon.Legendary.Contains("False"))
                             {
                                 team[i] = pokemon;
-                                Console.Write(team[i].Name + ". ");
+                                Console.WriteLine(team[i].Name + ". ");
                                 Delay();
                             }
                         }
