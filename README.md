@@ -15,8 +15,3 @@ At line #__ in Program.cs, I've created a function to construct a complete list 
 <strong>(Read data from an external file, such as text, JSON, CSV, etc and use that data in your application):</strong>
 All data handled in the paragraph preceding this one is read from Pokemon.csv.
 
-<strong>(Visualize data in a graph, chart, or other visual representation of data):</strong>
-at line #___ When all pokemon are chosen for the user's team, and at line #___ when all pokemon have been selected for the opponent's team, the program displays the name of each pokemon in both teams on opposing sides of the window.
-
-<h2>Special Instructions:</h2>
-have fun!
