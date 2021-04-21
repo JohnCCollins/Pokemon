@@ -55,12 +55,20 @@ namespace Pokemon
                                 pokemon.Number = 0;
                             }
 
-
-                            if (pokemon.Number == teamMate && pokemon.Legendary.Contains("True"))
+                            // if random result is a Legendary pokemon, or a pokemon with multiple form options,
+                            // the result is overridden and reset to find a standard pokemon.
+                            if (pokemon.Number == teamMate && pokemon.Name.Contains("Rotom") ||
+                                pokemon.Number == teamMate && pokemon.Name.Contains("Forme") ||
+                                pokemon.Number == teamMate && pokemon.Name.Contains("Size") ||
+                                pokemon.Number == teamMate && pokemon.Name.Contains("Cloak") ||
+                                pokemon.Number == teamMate && pokemon.Name.Contains("Mode") ||
+                                pokemon.Number == teamMate && pokemon.Name.Contains("Male") ||
+                                pokemon.Number == teamMate && pokemon.Name.Contains("Female") ||
+                                pokemon.Number == teamMate && pokemon.Legendary.Contains("True"))
                             {
-                                teamMate = enemySel.Next(pokemon.Number, 721);
+                                teamMate = 1;
                                 pokemon.Number = 0;
-                                Console.WriteLine("Legendary: '" + pokemon.Name + "' found and overridden");
+                                i--;
         
                             }
                             else if (pokemon.Number == teamMate && pokemon.Legendary.Contains("False"))
@@ -142,20 +150,31 @@ namespace Pokemon
                     int foe = enemySel.Next(1, 721);
                     foreach (Pokemon pokemon in fileContents)
                     {
+                        // if random result has an alternate 'Mega' form, the Mega result(s) will be removed,
+                        // and the standard version of the result pokemon will be assigned to the team.
                         if (pokemon.Name.Contains("Mega"))
                         {
                             pokemon.Number = 0;
                         }
 
-
-                        if (pokemon.Number == foe && pokemon.Legendary.Contains("True"))
+                        // if random result is a Legendary pokemon, or a pokemon with multiple form options,
+                        // the result is overridden and reset to find a standard pokemon.
+                        if (pokemon.Number == foe && pokemon.Name.Contains("Rotom") ||
+                                pokemon.Number == foe && pokemon.Name.Contains("Forme") ||
+                                pokemon.Number == foe && pokemon.Name.Contains("Size") ||
+                                pokemon.Number == foe && pokemon.Name.Contains("Cloak") ||
+                                pokemon.Number == foe && pokemon.Name.Contains("Mode") ||
+                                pokemon.Number == foe && pokemon.Name.Contains("Male") ||
+                                pokemon.Number == foe && pokemon.Name.Contains("Female") ||
+                                pokemon.Number == foe && pokemon.Legendary.Contains("True"))
                         {
-                            foe = enemySel.Next(1, 715);
+                            foe = 1;
                             pokemon.Number = 0;
-                            Console.WriteLine("Legendary: '" + pokemon.Name + "' found and overridden");
+                            i--;
                             
                             
-                        }
+                            
+                        }       // Standard pokemon is assigned to team.
                         else if (pokemon.Number == foe && pokemon.Legendary.Contains("False"))
                         {
                             enemyTeam[i] = pokemon;
@@ -188,15 +207,7 @@ namespace Pokemon
             }
         }
 
-        public static void randomBuild()
-        {
-            
-        }
-
-        public static void enemyBuild()
-        {
-
-        }
+    
 
         public static void LineBreak() // shorthand version of enclosed function, used throughout program for increased readability.
         {
@@ -240,7 +251,7 @@ namespace Pokemon
                 LineBreak();
                 Console.WriteLine("Sent out " + fighters[0].Name);
                 Delay();
-                
+
             }
             else if (team.Length < 1)
             {
@@ -252,18 +263,44 @@ namespace Pokemon
                 Console.WriteLine("Which pokemon will you send out?");
 
                 var choice = Console.ReadLine();
+
                 for (int i = 0; i <= team.Length - 1; i++)
                 {
-
-                    if (choice.ToUpper() == team[i].Name.ToUpper())
+                    bool isPokemon = false;
+                    foreach (Pokemon pokemon in team)
                     {
-                        fighters[0] = team[i];
+
+                        if (pokemon.Name.ToUpper() == choice.ToUpper())
+                        {
+                            isPokemon = true;
+                            fighters[0] = pokemon;
+                        }
+                    }
+
+                    if (isPokemon == false)
+                    {
                         LineBreak();
+                        LineBreak();
+
+                        Console.WriteLine("There is no pokemon with the name '" + choice + "',");
+
+                        Console.Write("please check for typing errors and try again: ");
+
+                        LineBreak();
+
+
+                        choice = Console.ReadLine();
+
+                        LineBreak();
+
+                        i--;
+
+                    }
+                    else
+                    {
                         Console.WriteLine("Sent out " + fighters[0].Name);
-                        Delay();
                         break;
                     }
-                
                 }
             }
         }
